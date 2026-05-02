@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 
 const authRoutes = require("./routes/auth.routes");
+const dashboardRoutes = require("./routes/dashboard.routes");
 const projectRoutes = require("./routes/projects.routes");
 const taskRoutes = require("./routes/tasks.routes");
 
@@ -22,6 +23,7 @@ app.get("/health", (req, res) => res.json({ status: "ok" }));
 
 // API routes
 app.use("/api/auth", authRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/projects", projectRoutes);
 // Mount task routes under projects (nested)
 app.use("/api/projects/:projectId/tasks", taskRoutes);
