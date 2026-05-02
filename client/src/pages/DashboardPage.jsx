@@ -53,12 +53,38 @@ function DashboardPage() {
   return (
     <section className="page-stack">
       <div className="hero-card">
-        <div>
-          <p className="eyebrow">Overview</p>
-          <h1>Project dashboard</h1>
-          <p className="muted-text">
-            Keep track of active work, overdue tasks, and team progress across projects.
-          </p>
+        <div className="hero-card-main">
+          <div>
+            <p className="eyebrow">Overview</p>
+            <h1>Project dashboard</h1>
+            <p className="hero-text">
+              Keep track of active work, overdue tasks, and team progress across projects.
+            </p>
+          </div>
+          <div className="hero-orbit">
+            <div className="orbit-card">
+              <span>Open workload</span>
+              <strong>{(summary.todoTasks || 0) + (summary.inProgressTasks || 0)}</strong>
+            </div>
+            <div className="orbit-card accent-orbit">
+              <span>Completed</span>
+              <strong>{summary.completedTasks || 0}</strong>
+            </div>
+          </div>
+        </div>
+        <div className="hero-inline-stats">
+          <div>
+            <span className="hero-metric-label">Projects</span>
+            <strong>{summary.totalProjects || 0}</strong>
+          </div>
+          <div>
+            <span className="hero-metric-label">Tasks</span>
+            <strong>{summary.totalTasks || 0}</strong>
+          </div>
+          <div>
+            <span className="hero-metric-label">Overdue</span>
+            <strong>{summary.overdueTasks || 0}</strong>
+          </div>
         </div>
       </div>
 
@@ -85,7 +111,10 @@ function DashboardPage() {
 
       <div className="two-column">
         <section className="panel">
-          <h2>Create project</h2>
+          <div className="section-heading">
+            <p className="eyebrow">Workspace</p>
+            <h2>Create project</h2>
+          </div>
           <form className="form-grid" onSubmit={handleCreateProject}>
             <label className="field">
               <span>Project name</span>
@@ -112,7 +141,10 @@ function DashboardPage() {
         </section>
 
         <section className="panel">
-          <h2>Your projects</h2>
+          <div className="section-heading">
+            <p className="eyebrow">Projects</p>
+            <h2>Your projects</h2>
+          </div>
           <div className="list-stack">
             {projects.length === 0 ? (
               <p className="muted-text">Create your first project to start assigning tasks.</p>
@@ -126,7 +158,7 @@ function DashboardPage() {
                     </p>
                   </div>
                   <div className="list-card-meta">
-                    <span>{project.membershipRole}</span>
+                    <span className="pill">{project.membershipRole}</span>
                     <span>{project._count.tasks} tasks</span>
                   </div>
                 </Link>
@@ -137,18 +169,25 @@ function DashboardPage() {
       </div>
 
       <section className="panel">
-        <h2>Recent tasks</h2>
+        <div className="section-heading">
+          <p className="eyebrow">Activity</p>
+          <h2>Recent tasks</h2>
+        </div>
         <div className="task-grid">
           {(dashboard?.tasks || []).slice(0, 8).map((task) => (
             <article key={task.id} className="task-card">
               <div className="task-card-top">
                 <span className={`badge badge-${task.status.toLowerCase()}`}>{task.status}</span>
-                <span className="muted-text">{task.project.name}</span>
+                <span className="pill subtle-pill">{task.project.name}</span>
               </div>
               <h3>{task.title}</h3>
               <p className="muted-text">
                 {task.assignee ? `Assigned to ${task.assignee.name}` : "Unassigned"}
               </p>
+              <div className="task-card-footer">
+                <span className="muted-text">Priority view</span>
+                <span className="task-arrow">↗</span>
+              </div>
             </article>
           ))}
         </div>

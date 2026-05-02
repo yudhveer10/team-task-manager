@@ -41,16 +41,34 @@ function AuthPage({ mode }) {
 
   return (
     <section className="auth-layout">
-      <div className="auth-panel">
-        <p className="eyebrow">Assignment build</p>
-        <h1>{isSignup ? "Create your account" : "Welcome back"}</h1>
-        <p className="muted-text">
-          Manage projects, invite teammates, assign work, and track delivery in one place.
-        </p>
+      <div className="auth-panel auth-showcase">
+        <div className="auth-showcase-copy">
+          <p className="eyebrow">Assignment build</p>
+          <h1>{isSignup ? "Lead every sprint with clarity" : "Pick up where your team left off"}</h1>
+          <p className="muted-text auth-lead">
+            Manage projects, invite teammates, assign work, and track delivery through a focused command center.
+          </p>
+        </div>
+
+        <div className="auth-highlight-grid">
+          <article className="highlight-card">
+            <span className="highlight-kicker">Roles</span>
+            <strong>Admin and member access</strong>
+            <p>Control who can invite, assign, and manage delivery inside each project.</p>
+          </article>
+          <article className="highlight-card">
+            <span className="highlight-kicker">Flow</span>
+            <strong>Track progress visually</strong>
+            <p>See what is blocked, in motion, overdue, and completed at a glance.</p>
+          </article>
+        </div>
       </div>
 
       <form className="auth-card" onSubmit={handleSubmit}>
-        <h2>{isSignup ? "Sign up" : "Login"}</h2>
+        <div className="section-heading">
+          <p className="eyebrow">{isSignup ? "Start here" : "Secure access"}</p>
+          <h2>{isSignup ? "Create account" : "Login"}</h2>
+        </div>
         {error && <p className="error-banner">{error}</p>}
 
         {isSignup && (

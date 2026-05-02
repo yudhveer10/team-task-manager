@@ -115,13 +115,27 @@ function ProjectPage() {
 
   return (
     <section className="page-stack">
-      <div className="project-header">
-        <div>
+      <div className="project-header project-hero">
+        <div className="project-hero-copy">
           <Link to="/dashboard" className="text-link">
             Back to dashboard
           </Link>
           <h1>{project.name}</h1>
           <p className="muted-text">{project.description || "No description provided."}</p>
+        </div>
+        <div className="project-hero-stats">
+          <div className="mini-stat">
+            <span>Members</span>
+            <strong>{project.members.length}</strong>
+          </div>
+          <div className="mini-stat">
+            <span>Tasks</span>
+            <strong>{project.tasks.length}</strong>
+          </div>
+          <div className="mini-stat">
+            <span>Your role</span>
+            <strong>{currentMembership?.role || "MEMBER"}</strong>
+          </div>
         </div>
       </div>
 
@@ -129,7 +143,10 @@ function ProjectPage() {
 
       <div className="two-column">
         <section className="panel">
-          <h2>Create task</h2>
+          <div className="section-heading">
+            <p className="eyebrow">Execution</p>
+            <h2>Create task</h2>
+          </div>
           <form className="form-grid" onSubmit={handleCreateTask}>
             <label className="field">
               <span>Title</span>
@@ -187,7 +204,10 @@ function ProjectPage() {
         </section>
 
         <section className="panel">
-          <h2>Team members</h2>
+          <div className="section-heading">
+            <p className="eyebrow">Team</p>
+            <h2>Team members</h2>
+          </div>
           {isAdmin && (
             <form className="inline-form" onSubmit={handleInviteMember}>
               <input
@@ -218,7 +238,7 @@ function ProjectPage() {
                   <p className="muted-text">{member.user.email}</p>
                 </div>
                 <div className="member-actions">
-                  <span>{member.role}</span>
+                  <span className="pill">{member.role}</span>
                   {isAdmin && member.user.id !== project.ownerId && (
                     <>
                       <button
@@ -250,14 +270,17 @@ function ProjectPage() {
       </div>
 
       <section className="panel">
-        <h2>Tasks</h2>
+        <div className="section-heading">
+          <p className="eyebrow">Workflow</p>
+          <h2>Tasks</h2>
+        </div>
         <div className="list-stack">
           {project.tasks.map((task) => (
             <article key={task.id} className="task-row">
               <div>
                 <div className="task-card-top">
                   <span className={`badge badge-${task.status.toLowerCase()}`}>{task.status}</span>
-                  <span className="muted-text">{task.priority} priority</span>
+                  <span className="pill subtle-pill">{task.priority} priority</span>
                 </div>
                 <h3>{task.title}</h3>
                 <p className="muted-text">{task.description || "No description"}</p>
