@@ -76,27 +76,6 @@ function AuthPage({ mode }) {
       </div>
 
       <div className="auth-side-stack">
-        <div className="floating-preview-card">
-          <div className="preview-heading">
-            <span className="preview-pulse" />
-            Live workspace pulse
-          </div>
-          <div className="preview-rows">
-            <div className="preview-row">
-              <span>Overdue tasks</span>
-              <strong>03</strong>
-            </div>
-            <div className="preview-row">
-              <span>Projects in motion</span>
-              <strong>12</strong>
-            </div>
-            <div className="preview-row">
-              <span>Team completion rate</span>
-              <strong>86%</strong>
-            </div>
-          </div>
-        </div>
-
         <form className="auth-card" onSubmit={handleSubmit}>
           <div className="section-heading">
             <p className="eyebrow">{isSignup ? "Start here" : "Secure access"}</p>
