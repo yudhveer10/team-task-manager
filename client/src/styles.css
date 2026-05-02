@@ -1,5 +1,7 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
+
 :root {
-  font-family: "Segoe UI Variable", "Trebuchet MS", "Gill Sans", sans-serif;
+  font-family: "Manrope", "Aptos", "Segoe UI Variable", "Helvetica Neue", Arial, sans-serif;
   color: #1b2438;
   background:
     radial-gradient(circle at top left, rgba(255, 159, 67, 0.14), transparent 28%),
@@ -21,6 +23,10 @@
 
 * {
   box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -73,7 +79,7 @@ select {
 }
 
 .app-content {
-  max-width: 1280px;
+  max-width: 1420px;
   margin: 0 auto;
   padding: 32px 24px 56px;
 }
@@ -95,6 +101,15 @@ select {
   font-size: 1.25rem;
   font-weight: 800;
   letter-spacing: -0.03em;
+}
+
+.topbar-note {
+  padding: 9px 14px;
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.08);
+  color: var(--secondary);
+  font-size: 0.84rem;
+  font-weight: 700;
 }
 
 .topbar-nav,
@@ -122,8 +137,10 @@ select {
 
 .auth-layout {
   align-items: center;
-  min-height: calc(100vh - 120px);
-  gap: 32px;
+  min-height: calc(100vh - 132px);
+  gap: 36px;
+  grid-template-columns: minmax(0, 1.15fr) minmax(420px, 0.85fr);
+  position: relative;
 }
 
 .hero-card,
@@ -139,6 +156,7 @@ select {
   border-radius: 28px;
   box-shadow: var(--shadow);
   backdrop-filter: blur(18px);
+  animation: fade-up 700ms ease both;
 }
 
 .hero-card,
@@ -348,17 +366,44 @@ select:focus {
 }
 
 .auth-showcase {
-  min-height: 520px;
+  min-height: 640px;
   display: grid;
   align-content: space-between;
   background:
     radial-gradient(circle at top left, rgba(255, 255, 255, 0.24), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(255, 214, 170, 0.18), transparent 28%),
     linear-gradient(160deg, #182236 0%, #103f4a 58%, #1d6b63 100%);
   color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-showcase::before {
+  content: "";
+  position: absolute;
+  inset: 24px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+}
+
+.auth-showcase::after {
+  content: "";
+  position: absolute;
+  top: 48px;
+  right: -40px;
+  width: 180px;
+  height: 180px;
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.02));
+  transform: rotate(18deg);
+  animation: float-card 8s ease-in-out infinite;
 }
 
 .auth-showcase-copy {
   max-width: 500px;
+  position: relative;
+  z-index: 1;
 }
 
 .auth-lead,
@@ -372,6 +417,8 @@ select:focus {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
+  position: relative;
+  z-index: 1;
 }
 
 .highlight-card {
@@ -398,6 +445,7 @@ select:focus {
 
 .auth-card {
   background: rgba(255, 255, 255, 0.9);
+  animation-delay: 120ms;
 }
 
 .hero-card-main,
@@ -551,6 +599,145 @@ select:focus {
   font-weight: 700;
 }
 
+.auth-side-stack {
+  position: relative;
+  display: grid;
+  gap: 18px;
+}
+
+.floating-preview-card {
+  justify-self: end;
+  width: min(100%, 340px);
+  padding: 20px 22px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.68);
+  border: 1px solid rgba(255, 255, 255, 0.56);
+  box-shadow: 0 24px 60px rgba(17, 24, 39, 0.12);
+  backdrop-filter: blur(20px);
+  animation: float-card 6s ease-in-out infinite;
+}
+
+.preview-heading,
+.preview-row,
+.activity-chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.preview-heading {
+  color: #203049;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.preview-pulse,
+.activity-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  flex: 0 0 auto;
+}
+
+.preview-pulse {
+  background: var(--primary);
+  box-shadow: 0 0 0 0 rgba(224, 108, 42, 0.5);
+  animation: pulse-glow 2.2s infinite;
+}
+
+.preview-rows {
+  display: grid;
+  gap: 12px;
+}
+
+.preview-row {
+  padding: 12px 0;
+  border-top: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.preview-row:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.preview-row span {
+  color: var(--text-muted);
+}
+
+.preview-row strong {
+  color: #14233a;
+  font-size: 1.1rem;
+}
+
+.showcase-activity-band {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.activity-chip {
+  justify-content: flex-start;
+  padding: 12px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.92rem;
+  animation: fade-up 900ms ease both;
+}
+
+.success-dot {
+  background: #36d399;
+}
+
+.warning-dot {
+  background: #ffb454;
+}
+
+.auth-submit {
+  width: 100%;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float-card {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(224, 108, 42, 0.45);
+  }
+
+  70% {
+    box-shadow: 0 0 0 14px rgba(224, 108, 42, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(224, 108, 42, 0);
+  }
+}
+
 @media (max-width: 900px) {
   .auth-layout,
   .two-column {
@@ -583,5 +770,13 @@ select:focus {
 
   .auth-showcase {
     min-height: auto;
+  }
+
+  .floating-preview-card {
+    justify-self: stretch;
+  }
+
+  .topbar-note {
+    order: 3;
   }
 }

@@ -33,6 +33,7 @@ function Header() {
           </>
         ) : (
           <>
+            <span className="topbar-note">Open signup for new teams</span>
             <Link to="/login" className="text-link">
               Login
             </Link>
