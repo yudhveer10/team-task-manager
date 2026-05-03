@@ -6,7 +6,7 @@ A full-stack project management web app where users can sign up, create projects
 
 - Live App: [mellow-education-production-f09a.up.railway.app](https://mellow-education-production-f09a.up.railway.app)
 - GitHub Repository: [github.com/yudhveer10/team-task-manager](https://github.com/yudhveer10/team-task-manager)
-- Demo Video: Add your video link here
+- Demo Video: https://drive.google.com/file/d/1pc_8CCEs9vfnMQ6dyO91je7q8iplitCo/view?usp=drivesdk
 
 ## Overview
 
