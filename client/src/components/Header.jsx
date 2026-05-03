@@ -5,6 +5,8 @@ function Header() {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const isDashboard = location.pathname === "/dashboard";
+  const isProject = location.pathname.startsWith("/projects/");
 
   const handleLogout = () => {
     logout();
@@ -13,15 +15,24 @@ function Header() {
 
   return (
     <header className="topbar">
-      <Link to="/dashboard" className="brand">
-        Team Task Manager
-      </Link>
+      <div className="topbar-brand-block">
+        <Link to="/dashboard" className="brand">
+          Team Task Manager
+        </Link>
+        {user && (
+          <span className="topbar-route-chip">
+            {isDashboard ? "Control Center" : isProject ? "Project Workspace" : "Workspace"}
+          </span>
+        )}
+      </div>
+
       <nav className="topbar-nav">
         {user ? (
           <>
-            <span className="topbar-user">
-              {user.name}
-            </span>
+            <div className="topbar-user-block">
+              <span className="topbar-user-label">Signed in as</span>
+              <span className="topbar-user">{user.name}</span>
+            </div>
             {location.pathname !== "/dashboard" && (
               <Link to="/dashboard" className="text-link">
                 Dashboard

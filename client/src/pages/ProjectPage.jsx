@@ -36,6 +36,13 @@ function ProjectPage() {
 
   const currentMembership = project?.members.find((member) => member.userId === user?.id);
   const isAdmin = currentMembership?.role === "ADMIN";
+  const groupedTasks = project
+    ? {
+        TODO: project.tasks.filter((task) => task.status === "TODO"),
+        IN_PROGRESS: project.tasks.filter((task) => task.status === "IN_PROGRESS"),
+        DONE: project.tasks.filter((task) => task.status === "DONE"),
+      }
+    : { TODO: [], IN_PROGRESS: [], DONE: [] };
 
   const handleCreateTask = async (event) => {
     event.preventDefault();
@@ -272,42 +279,64 @@ function ProjectPage() {
       <section className="panel">
         <div className="section-heading">
           <p className="eyebrow">Workflow</p>
-          <h2>Tasks</h2>
+          <h2>Task board</h2>
         </div>
-        <div className="list-stack">
-          {project.tasks.map((task) => (
-            <article key={task.id} className="task-row">
-              <div>
-                <div className="task-card-top">
-                  <span className={`badge badge-${task.status.toLowerCase()}`}>{task.status}</span>
-                  <span className="pill subtle-pill">{task.priority} priority</span>
+        <div className="kanban-grid">
+          {[
+            { key: "TODO", label: "Todo" },
+            { key: "IN_PROGRESS", label: "In Progress" },
+            { key: "DONE", label: "Done" },
+          ].map((column) => (
+            <section key={column.key} className="kanban-column">
+              <div className="kanban-column-header">
+                <div>
+                  <span className="pill subtle-pill">{column.label}</span>
                 </div>
-                <h3>{task.title}</h3>
-                <p className="muted-text">{task.description || "No description"}</p>
-                <p className="muted-text">
-                  {task.assignee ? `Assigned to ${task.assignee.name}` : "Unassigned"}
-                </p>
+                <strong>{groupedTasks[column.key].length}</strong>
               </div>
-              <div className="member-actions">
-                <select
-                  value={task.status}
-                  onChange={(event) => handleStatusChange(task.id, event.target.value)}
-                >
-                  <option value="TODO">TODO</option>
-                  <option value="IN_PROGRESS">IN PROGRESS</option>
-                  <option value="DONE">DONE</option>
-                </select>
-                {isAdmin && (
-                  <button
-                    type="button"
-                    className="ghost-button danger-button"
-                    onClick={() => handleDeleteTask(task.id)}
-                  >
-                    Delete
-                  </button>
+
+              <div className="kanban-card-stack">
+                {groupedTasks[column.key].length === 0 ? (
+                  <div className="kanban-empty">
+                    <span>No tasks here yet</span>
+                  </div>
+                ) : (
+                  groupedTasks[column.key].map((task) => (
+                    <article key={task.id} className="kanban-task-card">
+                      <div className="task-card-top">
+                        <span className={`badge badge-${task.status.toLowerCase()}`}>{task.status}</span>
+                        <span className="pill subtle-pill">{task.priority}</span>
+                      </div>
+                      <h3>{task.title}</h3>
+                      <p className="muted-text">{task.description || "No description"}</p>
+                      <div className="kanban-task-meta">
+                        <span>{task.assignee ? task.assignee.name : "Unassigned"}</span>
+                        <span>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "No due date"}</span>
+                      </div>
+                      <div className="kanban-task-actions">
+                        <select
+                          value={task.status}
+                          onChange={(event) => handleStatusChange(task.id, event.target.value)}
+                        >
+                          <option value="TODO">TODO</option>
+                          <option value="IN_PROGRESS">IN PROGRESS</option>
+                          <option value="DONE">DONE</option>
+                        </select>
+                        {isAdmin && (
+                          <button
+                            type="button"
+                            className="ghost-button danger-button"
+                            onClick={() => handleDeleteTask(task.id)}
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </div>
+                    </article>
+                  ))
                 )}
               </div>
-            </article>
+            </section>
           ))}
         </div>
       </section>

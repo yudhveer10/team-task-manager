@@ -49,22 +49,32 @@ function DashboardPage() {
   }
 
   const summary = dashboard?.summary || {};
+  const recentTasks = (dashboard?.tasks || []).slice(0, 6);
+  const workload = (summary.todoTasks || 0) + (summary.inProgressTasks || 0);
+  const completionRate = summary.totalTasks
+    ? Math.round(((summary.completedTasks || 0) / summary.totalTasks) * 100)
+    : 0;
 
   return (
     <section className="page-stack">
-      <div className="hero-card">
+      <div className="hero-card dashboard-hero">
         <div className="hero-card-main">
-          <div>
+          <div className="hero-copy-block">
             <p className="eyebrow">Overview</p>
             <h1>Project dashboard</h1>
             <p className="hero-text">
               Keep track of active work, overdue tasks, and team progress across projects.
             </p>
+            <div className="hero-tag-row">
+              <span className="hero-tag">Live team overview</span>
+              <span className="hero-tag">Role-based workflow</span>
+              <span className="hero-tag">Railway deployed</span>
+            </div>
           </div>
           <div className="hero-orbit">
             <div className="orbit-card">
               <span>Open workload</span>
-              <strong>{(summary.todoTasks || 0) + (summary.inProgressTasks || 0)}</strong>
+              <strong>{workload}</strong>
             </div>
             <div className="orbit-card accent-orbit">
               <span>Completed</span>
@@ -89,6 +99,72 @@ function DashboardPage() {
       </div>
 
       {error && <p className="error-banner">{error}</p>}
+
+      <div className="insight-grid">
+        <section className="panel insight-panel">
+          <div className="section-heading">
+            <p className="eyebrow">Focus</p>
+            <h2>Execution snapshot</h2>
+          </div>
+          <div className="progress-track">
+            <div className="progress-fill" style={{ width: `${completionRate}%` }} />
+          </div>
+          <div className="progress-meta">
+            <div>
+              <span className="progress-label">Completion rate</span>
+              <strong>{completionRate}%</strong>
+            </div>
+            <div>
+              <span className="progress-label">Open items</span>
+              <strong>{workload}</strong>
+            </div>
+          </div>
+          <div className="distribution-grid">
+            <article className="distribution-card">
+              <span>Todo</span>
+              <strong>{summary.todoTasks || 0}</strong>
+            </article>
+            <article className="distribution-card">
+              <span>In progress</span>
+              <strong>{summary.inProgressTasks || 0}</strong>
+            </article>
+            <article className="distribution-card">
+              <span>Done</span>
+              <strong>{summary.completedTasks || 0}</strong>
+            </article>
+          </div>
+        </section>
+
+        <section className="panel insight-panel">
+          <div className="section-heading">
+            <p className="eyebrow">Momentum</p>
+            <h2>Suggested next moves</h2>
+          </div>
+          <div className="action-list">
+            <div className="action-item">
+              <span className="action-dot action-dot-orange" />
+              <div>
+                <strong>Create a project brief</strong>
+                <p className="muted-text">Add a strong description so new members understand goals faster.</p>
+              </div>
+            </div>
+            <div className="action-item">
+              <span className="action-dot action-dot-green" />
+              <div>
+                <strong>Assign owners early</strong>
+                <p className="muted-text">Tasks move faster when each item has one visible owner and due date.</p>
+              </div>
+            </div>
+            <div className="action-item">
+              <span className="action-dot action-dot-blue" />
+              <div>
+                <strong>Use the project workspace</strong>
+                <p className="muted-text">Open a project to manage team roles, delivery flow, and status updates.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
 
       <div className="stats-grid">
         <article className="stat-card">
@@ -147,19 +223,26 @@ function DashboardPage() {
           </div>
           <div className="list-stack">
             {projects.length === 0 ? (
-              <p className="muted-text">Create your first project to start assigning tasks.</p>
+              <div className="empty-panel">
+                <strong>No projects yet</strong>
+                <p className="muted-text">Create your first workspace to invite a team, assign work, and track progress.</p>
+              </div>
             ) : (
               projects.map((project) => (
-                <Link key={project.id} to={`/projects/${project.id}`} className="list-card">
-                  <div>
+                <Link key={project.id} to={`/projects/${project.id}`} className="project-spotlight-card">
+                  <div className="project-spotlight-copy">
                     <h3>{project.name}</h3>
                     <p className="muted-text">
                       {project.description || "No description added yet"}
                     </p>
+                    <div className="project-spotlight-meta">
+                      <span className="pill">{project.membershipRole}</span>
+                      <span className="muted-text">{project._count.members} members</span>
+                    </div>
                   </div>
-                  <div className="list-card-meta">
-                    <span className="pill">{project.membershipRole}</span>
-                    <span>{project._count.tasks} tasks</span>
+                  <div className="project-spotlight-stats">
+                    <strong>{project._count.tasks}</strong>
+                    <span>tasks</span>
                   </div>
                 </Link>
               ))
@@ -174,22 +257,29 @@ function DashboardPage() {
           <h2>Recent tasks</h2>
         </div>
         <div className="task-grid">
-          {(dashboard?.tasks || []).slice(0, 8).map((task) => (
-            <article key={task.id} className="task-card">
-              <div className="task-card-top">
-                <span className={`badge badge-${task.status.toLowerCase()}`}>{task.status}</span>
-                <span className="pill subtle-pill">{task.project.name}</span>
-              </div>
-              <h3>{task.title}</h3>
-              <p className="muted-text">
-                {task.assignee ? `Assigned to ${task.assignee.name}` : "Unassigned"}
-              </p>
-              <div className="task-card-footer">
-                <span className="muted-text">Priority view</span>
-                <span className="task-arrow">↗</span>
-              </div>
-            </article>
-          ))}
+          {recentTasks.length === 0 ? (
+            <div className="empty-panel wide-empty-panel">
+              <strong>No recent tasks yet</strong>
+              <p className="muted-text">Once tasks are created inside a project, they will appear here with status and assignee details.</p>
+            </div>
+          ) : (
+            recentTasks.map((task) => (
+              <article key={task.id} className="task-card enhanced-task-card">
+                <div className="task-card-top">
+                  <span className={`badge badge-${task.status.toLowerCase()}`}>{task.status}</span>
+                  <span className="pill subtle-pill">{task.project.name}</span>
+                </div>
+                <h3>{task.title}</h3>
+                <p className="muted-text">
+                  {task.assignee ? `Assigned to ${task.assignee.name}` : "Unassigned"}
+                </p>
+                <div className="task-card-footer">
+                  <span className="muted-text">Open in workspace</span>
+                  <span className="task-arrow">↗</span>
+                </div>
+              </article>
+            ))
+          )}
         </div>
       </section>
     </section>
