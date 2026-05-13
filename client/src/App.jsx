@@ -3,6 +3,8 @@ import Header from "./components/Header";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthPage from "./pages/AuthPage";
 import DashboardPage from "./pages/DashboardPage";
+import LandingPage from "./pages/LandingPage";
+import OAuthCallbackPage from "./pages/OAuthCallbackPage";
 import ProjectPage from "./pages/ProjectPage";
 
 function App() {
@@ -11,9 +13,10 @@ function App() {
       <Header />
       <main className="app-content">
         <Routes>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<AuthPage mode="login" />} />
           <Route path="/signup" element={<AuthPage mode="signup" />} />
+          <Route path="/oauth/callback" element={<OAuthCallbackPage />} />
           <Route
             path="/dashboard"
             element={

@@ -39,6 +39,13 @@ export function AuthProvider({ children }) {
     setUser(nextUser);
   };
 
+  const loginWithToken = async (nextToken) => {
+    localStorage.setItem(TOKEN_KEY, nextToken);
+    setToken(nextToken);
+    const response = await authApi.me(nextToken);
+    setUser(response.user);
+  };
+
   const logout = () => {
     localStorage.removeItem(TOKEN_KEY);
     setToken(null);
@@ -46,7 +53,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ token, user, loading, login, logout }}>
+    <AuthContext.Provider value={{ token, user, loading, login, loginWithToken, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,4 +1,5 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+export const AUTH_BASE_URL = API_BASE_URL.replace(/\/api$/, "");
 
 const buildHeaders = (token) => {
   const headers = {
@@ -32,6 +33,7 @@ export const authApi = {
   signup: (payload) => apiRequest("/auth/signup", { method: "POST", body: payload }),
   login: (payload) => apiRequest("/auth/login", { method: "POST", body: payload }),
   me: (token) => apiRequest("/auth/me", { token }),
+  providers: () => apiRequest("/auth/providers"),
 };
 
 export const projectApi = {

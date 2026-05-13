@@ -1,11 +1,12 @@
-import { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, Navigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { authApi } from "../lib/api";
+import { AUTH_BASE_URL, authApi } from "../lib/api";
 
 function AuthPage({ mode }) {
   const isSignup = mode === "signup";
   const { token, login } = useAuth();
+  const [searchParams] = useSearchParams();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -13,6 +14,25 @@ function AuthPage({ mode }) {
   });
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [providers, setProviders] = useState({ google: false, github: false });
+
+  useEffect(() => {
+    const loadProviders = async () => {
+      try {
+        const response = await authApi.providers();
+        setProviders(response.providers);
+      } catch (requestError) {
+        setProviders({ google: false, github: false });
+      }
+    };
+
+    const authError = searchParams.get("error");
+    if (authError) {
+      setError(authError);
+    }
+
+    loadProviders();
+  }, [searchParams]);
 
   if (token) {
     return <Navigate to="/dashboard" replace />;
@@ -125,6 +145,29 @@ function AuthPage({ mode }) {
           <button type="submit" className="primary-button auth-submit" disabled={submitting}>
             {submitting ? "Please wait..." : isSignup ? "Create account" : "Login"}
           </button>
+
+          <div className="auth-divider">
+            <span>or continue with</span>
+          </div>
+
+          <div className="social-auth-grid">
+            <a
+              href={providers.google ? `${AUTH_BASE_URL}/api/auth/google` : "#"}
+              className={`social-auth-button ${!providers.google ? "social-auth-disabled" : ""}`}
+              aria-disabled={!providers.google}
+            >
+              <span>Google</span>
+              <small>{providers.google ? "Continue with Google" : "Connect later in env setup"}</small>
+            </a>
+            <a
+              href={providers.github ? `${AUTH_BASE_URL}/api/auth/github` : "#"}
+              className={`social-auth-button ${!providers.github ? "social-auth-disabled" : ""}`}
+              aria-disabled={!providers.github}
+            >
+              <span>GitHub</span>
+              <small>{providers.github ? "Continue with GitHub" : "Connect later in env setup"}</small>
+            </a>
+          </div>
 
           <p className="inline-text">
             {isSignup ? "Already have an account?" : "Need an account?"}{" "}

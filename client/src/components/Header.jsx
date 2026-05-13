@@ -16,7 +16,7 @@ function Header() {
   return (
     <header className="topbar">
       <div className="topbar-brand-block">
-        <Link to="/dashboard" className="brand">
+        <Link to={user ? "/dashboard" : "/"} className="brand">
           Team Task Manager
         </Link>
         {user && (

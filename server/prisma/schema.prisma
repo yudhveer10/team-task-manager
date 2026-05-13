@@ -29,6 +29,10 @@ model User {
   name          String
   email         String          @unique
   password      String
+  provider      String          @default("local")
+  googleId      String?         @unique
+  githubId      String?         @unique
+  avatarUrl     String?
   projectsOwned Project[]       @relation("ProjectOwner")
   memberships   ProjectMember[]
   assignedTasks Task[]          @relation("TaskAssignee")
